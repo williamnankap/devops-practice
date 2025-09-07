@@ -7,4 +7,4 @@ phases:
       - echo "Syncing files to S3 bucket $DEPLOYMENT_BUCKET"
       - ls -l
       - cd aws-static-web-hosting/
-      - aws s3 sync . s3://$BUCKET_NAME --exclude "*.yaml" --exclude "*.sh" --exclude "*.md" --delete
+      - aws s3 sync . s3://$DEPLOYMENT_BUCKET --exclude "*.yaml" --exclude "*.sh" --exclude "*.md" --delete
