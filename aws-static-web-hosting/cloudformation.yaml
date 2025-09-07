@@ -6,6 +6,10 @@ Description:
 
 
 Parameters:
+  BucketProjectName:
+    Description: The name of the S3 bucket to create
+    Type: String
+    Default: aws-static-website-hosting
   ProjectName:
     Description: The name of the project
     Type: String
@@ -104,14 +108,14 @@ Resources:
     Type: AWS::S3::Bucket
     DeletionPolicy: Retain
     Properties:
-      BucketName: !Sub '${ProjectName}-${AWS::AccountId}-artifacts'
+      BucketName: !Sub '${BucketProjectName}-${AWS::AccountId}-artifacts'
 
   DeploymentBucket:
     Type: AWS::S3::Bucket
     DeletionPolicy: Retain
     Properties:
       AccessControl: PublicRead
-      BucketName: !Sub '${ProjectName}'
+      BucketName: !Sub '${BucketProjectName}'
       WebsiteConfiguration:
         IndexDocument: index.html
 
