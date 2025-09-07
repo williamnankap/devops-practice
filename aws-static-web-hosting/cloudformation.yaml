@@ -115,7 +115,7 @@ Resources:
     DeletionPolicy: Retain
     Properties:
       AccessControl: PublicRead
-      BucketName: !Sub '${BucketProjectName}'
+      BucketName: !Sub '${BucketProjectName}-${AWS::AccountId}-deployment'
       WebsiteConfiguration:
         IndexDocument: index.html
 
