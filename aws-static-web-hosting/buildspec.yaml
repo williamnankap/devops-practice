@@ -6,3 +6,5 @@ phases:
       - echo Build started on `date`
       - echo "Syncing files to S3 bucket $DEPLOYMENT_BUCKET"
       - ls -l
+      - cd aws-static-web-hosting/
+      - aws s3 sync . s3://$BUCKET_NAME --exclude "*.yaml" --exclude "*.sh" --exclude "*.md" --delete
