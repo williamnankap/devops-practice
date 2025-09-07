@@ -148,7 +148,7 @@ Resources:
   Pipeline:
     Type: AWS::CodePipeline::Pipeline
     Properties:
-      RoleArn: !Ref CodePipelineServiceRole
+      RoleArn: !GetAtt CodePipelineServiceRole.Arn
       PipelineType: V2
       ExecutionMode: PARALLEL
       ArtifactStore:
