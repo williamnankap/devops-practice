@@ -112,7 +112,12 @@ Resources:
   DeploymentBucket:
     Type: AWS::S3::Bucket
     Properties:
-      AccessControl: PublicRead
+      # AccessControl: PublicRead
+      PublicAccessBlockConfiguration:
+        BlockPublicAcls: false
+      OwnershipControls:
+        Rules:
+          - ObjectOwnership: ObjectWriter
       BucketName: !Sub '${BucketProjectName}-${AWS::AccountId}-deployment'
       WebsiteConfiguration:
         IndexDocument: index.html
