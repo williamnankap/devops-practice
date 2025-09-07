@@ -106,13 +106,11 @@ Resources:
 
   PipelineArtifactBucket:
     Type: AWS::S3::Bucket
-    DeletionPolicy: Retain
     Properties:
       BucketName: !Sub '${BucketProjectName}-${AWS::AccountId}-artifacts'
 
   DeploymentBucket:
     Type: AWS::S3::Bucket
-    DeletionPolicy: Retain
     Properties:
       AccessControl: PublicRead
       BucketName: !Sub '${BucketProjectName}-${AWS::AccountId}-deployment'
