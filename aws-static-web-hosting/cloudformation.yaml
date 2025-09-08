@@ -191,4 +191,7 @@ Resources:
               - Branches:
                   Includes:
                     - !Ref BranchName
+                FilePaths:
+                  Includes:
+                    - 'aws-static-web-hosting/*.html'
             SourceActionName: !Ref SourceActionGiveName

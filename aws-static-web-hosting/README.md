@@ -19,5 +19,5 @@
     - create script sh to deploy cloudformation template using aws cli
 
 Questions?
-- Who is coming first? Codepipeline or cloudformation?
-- after pushing my code in git, should i first deploy manually the cloudformation template or should i create a codepipeline and connect it with the repo?
+- How to integrate CDN? Only create a distribution and connect to S3?
+- aws cli command to delete object inside a bucket, to clean buckets before destroying them in destroy.sh.
