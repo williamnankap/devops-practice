@@ -121,6 +121,19 @@ Resources:
       BucketName: !Sub '${BucketProjectName}-${AWS::AccountId}-deployment'
       WebsiteConfiguration:
         IndexDocument: index.html
+  
+  PolicyForDeploymentBucket:
+    Type: 'AWS::S3::BucketPolicy'
+    Properties:
+      Bucket: !Ref DeploymentBucket
+      PolicyDocument:
+        Version: 2012-10-17
+        Statement:
+          - Sid: PublicReadForGetBucketObjects
+            Effect: Allow
+            Principal: '*'
+            Action: 's3:GetObject'
+            Resource: !Sub "${DeploymentBucket.Arn}/*"
 
   StaticWebBuild:
     Type: AWS::CodeBuild::Project
