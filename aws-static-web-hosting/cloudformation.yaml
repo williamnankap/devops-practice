@@ -208,3 +208,24 @@ Resources:
                   Includes:
                     - 'aws-static-web-hosting/*.html'
             SourceActionName: !Ref SourceActionGiveName
+  
+  CloudFrontDistributionDeploymentBucket:
+    Type: 'AWS::CloudFront::Distribution'
+    Properties:
+      DistributionConfig:
+        Enabled: true
+        Origins:
+          - DomainName: !GetAtt DeploymentBucket.RegionalDomainName
+            Id: !GetAtt DeploymentBucket.Arn
+            S3OriginConfig:
+              OriginAccessIdentity: ""
+        DefaultCacheBehavior:
+          TargetOriginId: !GetAtt DeploymentBucket.Arn
+          ViewerProtocolPolicy: allow-all
+          AllowedMethods:
+            - GET
+            - HEAD
+          ForwardedValues:
+            QueryString: false
+            Cookies:
+              Forward: none
