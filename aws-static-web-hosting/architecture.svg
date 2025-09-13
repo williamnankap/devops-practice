@@ -1,0 +1,217 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="1200" height="700" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="s3Gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#569A31;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#2E5D1A;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="cloudFrontGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#9D5AAE;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#6B3A7A;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="pipelineGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#3F48CC;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#1E2680;stop-opacity:1" />
+    </linearGradient>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="3" dy="3" stdDeviation="4" flood-color="#000000" flood-opacity="0.2"/>
+    </filter>
+    <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#333"/>
+    </marker>
+  </defs>
+  
+  <!-- Background -->
+  <rect width="1200" height="700" fill="#f8f9fa"/>
+  
+  <!-- Title -->
+  <text x="600" y="40" text-anchor="middle" font-family="Arial, sans-serif" font-size="28" font-weight="bold" fill="#333">
+    AWS Static Web Hosting Architecture
+  </text>
+  
+  <!-- AWS Cloud Container -->
+  <rect x="50" y="80" width="1100" height="500" rx="20" fill="none" stroke="#FF9900" stroke-width="3" stroke-dasharray="10,5"/>
+  <text x="80" y="110" font-family="Arial, sans-serif" font-size="18" font-weight="bold" fill="#FF9900">
+    AWS Cloud
+  </text>
+  
+  <!-- Developer Section -->
+  <g id="developer">
+    <rect x="80" y="140" width="180" height="120" rx="10" fill="#e9ecef" stroke="#6c757d" stroke-width="2" filter="url(#shadow)"/>
+    <text x="170" y="170" text-anchor="middle" font-family="Arial, sans-serif" font-size="16" font-weight="bold" fill="#333">
+      Developer
+    </text>
+    <circle cx="170" cy="200" r="25" fill="#007bff"/>
+    <text x="170" y="208" text-anchor="middle" font-family="Arial, sans-serif" font-size="16" fill="white">👨‍💻</text>
+    <text x="170" y="240" text-anchor="middle" font-family="Arial, sans-serif" font-size="12" fill="#666">
+      Git Push
+    </text>
+  </g>
+  
+  <!-- GitHub -->
+  <g id="github">
+    <rect x="80" y="300" width="180" height="100" rx="10" fill="#24292e" filter="url(#shadow)"/>
+    <text x="170" y="330" text-anchor="middle" font-family="Arial, sans-serif" font-size="16" font-weight="bold" fill="white">
+      GitHub Repository
+    </text>
+    <text x="170" y="350" text-anchor="middle" font-family="Arial, sans-serif" font-size="14" fill="#f6f8fa">
+      Source Code
+    </text>
+    <text x="170" y="370" text-anchor="middle" font-family="Arial, sans-serif" font-size="12" fill="#8b949e">
+      index.html, CSS, assets
+    </text>
+  </g>
+  
+  <!-- CodePipeline -->
+  <g id="codepipeline">
+    <rect x="320" y="250" width="200" height="150" rx="10" fill="url(#pipelineGradient)" filter="url(#shadow)"/>
+    <text x="420" y="280" text-anchor="middle" font-family="Arial, sans-serif" font-size="16" font-weight="bold" fill="white">
+      CodePipeline
+    </text>
+    <rect x="340" y="300" width="160" height="25" rx="5" fill="rgba(255,255,255,0.2)"/>
+    <text x="420" y="318" text-anchor="middle" font-family="Arial, sans-serif" font-size="12" fill="white">
+      Source Stage (GitHub)
+    </text>
+    <rect x="340" y="335" width="160" height="25" rx="5" fill="rgba(255,255,255,0.2)"/>
+    <text x="420" y="353" text-anchor="middle" font-family="Arial, sans-serif" font-size="12" fill="white">
+      Build Stage (CodeBuild)
+    </text>
+    <rect x="340" y="370" width="160" height="25" rx="5" fill="rgba(255,255,255,0.2)"/>
+    <text x="420" y="388" text-anchor="middle" font-family="Arial, sans-serif" font-size="12" fill="white">
+      Deploy Stage (S3)
+    </text>
+  </g>
+  
+  <!-- S3 Bucket -->
+  <g id="s3">
+    <rect x="580" y="300" width="200" height="120" rx="10" fill="url(#s3Gradient)" filter="url(#shadow)"/>
+    <text x="680" y="330" text-anchor="middle" font-family="Arial, sans-serif" font-size="16" font-weight="bold" fill="white">
+      S3 Bucket
+    </text>
+    <text x="680" y="350" text-anchor="middle" font-family="Arial, sans-serif" font-size="14" fill="#e8f5e8">
+      Static Website Hosting
+    </text>
+    <text x="680" y="370" text-anchor="middle" font-family="Arial, sans-serif" font-size="12" fill="#c8e6c8">
+      HTML, CSS, JS Files
+    </text>
+    <text x="680" y="390" text-anchor="middle" font-family="Arial, sans-serif" font-size="12" fill="#c8e6c8">
+      Public Read Access
+    </text>
+  </g>
+  
+  <!-- CloudFront CDN -->
+  <g id="cloudfront">
+    <rect x="580" y="140" width="200" height="120" rx="10" fill="url(#cloudFrontGradient)" filter="url(#shadow)"/>
+    <text x="680" y="170" text-anchor="middle" font-family="Arial, sans-serif" font-size="16" font-weight="bold" fill="white">
+      CloudFront CDN
+    </text>
+    <text x="680" y="190" text-anchor="middle" font-family="Arial, sans-serif" font-size="14" fill="#e8d5ea">
+      Global Distribution
+    </text>
+    <text x="680" y="210" text-anchor="middle" font-family="Arial, sans-serif" font-size="12" fill="#d1b8d4">
+      Edge Locations Worldwide
+    </text>
+    <text x="680" y="230" text-anchor="middle" font-family="Arial, sans-serif" font-size="12" fill="#d1b8d4">
+      HTTPS, Caching, Compression
+    </text>
+  </g>
+  
+  <!-- Users -->
+  <g id="users">
+    <rect x="850" y="200" width="200" height="120" rx="10" fill="#28a745" filter="url(#shadow)"/>
+    <text x="950" y="230" text-anchor="middle" font-family="Arial, sans-serif" font-size="16" font-weight="bold" fill="white">
+      End Users
+    </text>
+    <circle cx="920" cy="270" r="15" fill="white"/>
+    <text x="920" y="278" text-anchor="middle" font-family="Arial, sans-serif" font-size="12" fill="#28a745">👤</text>
+    <circle cx="950" cy="270" r="15" fill="white"/>
+    <text x="950" y="278" text-anchor="middle" font-family="Arial, sans-serif" font-size="12" fill="#28a745">👤</text>
+    <circle cx="980" cy="270" r="15" fill="white"/>
+    <text x="980" y="278" text-anchor="middle" font-family="Arial, sans-serif" font-size="12" fill="#28a745">👤</text>
+    <text x="950" y="300" text-anchor="middle" font-family="Arial, sans-serif" font-size="12" fill="white">
+      Global Access
+    </text>
+  </g>
+  
+  <!-- CloudFormation -->
+  <g id="cloudformation">
+    <rect x="320" y="450" width="200" height="80" rx="10" fill="#FF9900" filter="url(#shadow)"/>
+    <text x="420" y="480" text-anchor="middle" font-family="Arial, sans-serif" font-size="16" font-weight="bold" fill="white">
+      CloudFormation
+    </text>
+    <text x="420" y="500" text-anchor="middle" font-family="Arial, sans-serif" font-size="12" fill="#fff3e0">
+      Infrastructure as Code
+    </text>
+    <text x="420" y="515" text-anchor="middle" font-family="Arial, sans-serif" font-size="12" fill="#fff3e0">
+      Stack Management
+    </text>
+  </g>
+  
+  <!-- Arrows -->
+  <!-- Developer to GitHub -->
+  <path d="M 170 260 L 170 300" stroke="#333" stroke-width="3" fill="none" marker-end="url(#arrowhead)"/>
+  
+  <!-- GitHub to CodePipeline -->
+  <path d="M 260 350 L 320 325" stroke="#333" stroke-width="3" fill="none" marker-end="url(#arrowhead)"/>
+  
+  <!-- CodePipeline to S3 -->
+  <path d="M 520 325 L 580 360" stroke="#333" stroke-width="3" fill="none" marker-end="url(#arrowhead)"/>
+  
+  <!-- S3 to CloudFront -->
+  <path d="M 680 300 L 680 260" stroke="#333" stroke-width="3" fill="none" marker-end="url(#arrowhead)"/>
+  
+  <!-- CloudFront to Users -->
+  <path d="M 780 200 L 850 230" stroke="#333" stroke-width="3" fill="none" marker-end="url(#arrowhead)"/>
+  
+  <!-- CloudFormation to infrastructure (dashed) -->
+  <path d="M 420 450 L 420 400" stroke="#999" stroke-width="2" fill="none" stroke-dasharray="5,5"/>
+  <path d="M 440 470 L 580 340" stroke="#999" stroke-width="2" fill="none" stroke-dasharray="5,5"/>
+  
+  <!-- Data Flow Labels -->
+  <text x="180" y="280" font-family="Arial, sans-serif" font-size="11" fill="#666">git push</text>
+  <text x="280" y="340" font-family="Arial, sans-serif" font-size="11" fill="#666">webhook</text>
+  <text x="540" y="345" font-family="Arial, sans-serif" font-size="11" fill="#666">deploy</text>
+  <text x="700" y="285" font-family="Arial, sans-serif" font-size="11" fill="#666">origin</text>
+  <text x="800" y="220" font-family="Arial, sans-serif" font-size="11" fill="#666">HTTPS</text>
+  
+  <!-- Benefits Box -->
+  <rect x="50" y="600" width="1100" height="90" rx="10" fill="#e7f3ff" stroke="#0066cc" stroke-width="2"/>
+  <text x="600" y="630" text-anchor="middle" font-family="Arial, sans-serif" font-size="18" font-weight="bold" fill="#0066cc">
+    Key Benefits
+  </text>
+  
+  <text x="180" y="655" text-anchor="middle" font-family="Arial, sans-serif" font-size="14" font-weight="bold" fill="#333">
+    ⚡ Performance
+  </text>
+  <text x="180" y="675" text-anchor="middle" font-family="Arial, sans-serif" font-size="12" fill="#666">
+    Global CDN, Fast loading
+  </text>
+  
+  <text x="360" y="655" text-anchor="middle" font-family="Arial, sans-serif" font-size="14" font-weight="bold" fill="#333">
+    🔄 Automation
+  </text>
+  <text x="360" y="675" text-anchor="middle" font-family="Arial, sans-serif" font-size="12" fill="#666">
+    CI/CD pipeline, Zero-downtime
+  </text>
+  
+  <text x="540" y="655" text-anchor="middle" font-family="Arial, sans-serif" font-size="14" font-weight="bold" fill="#333">
+    💰 Cost-Effective
+  </text>
+  <text x="540" y="675" text-anchor="middle" font-family="Arial, sans-serif" font-size="12" fill="#666">
+    Pay-as-you-go, Serverless
+  </text>
+  
+  <text x="720" y="655" text-anchor="middle" font-family="Arial, sans-serif" font-size="14" font-weight="bold" fill="#333">
+    🔒 Security
+  </text>
+  <text x="720" y="675" text-anchor="middle" font-family="Arial, sans-serif" font-size="12" fill="#666">
+    HTTPS, AWS security model
+  </text>
+  
+  <text x="900" y="655" text-anchor="middle" font-family="Arial, sans-serif" font-size="14" font-weight="bold" fill="#333">
+    📈 Scalability
+  </text>
+  <text x="900" y="675" text-anchor="middle" font-family="Arial, sans-serif" font-size="12" fill="#666">
+    Auto-scaling, Global availability
+  </text>
+</svg>

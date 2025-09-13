@@ -1,0 +1,239 @@
+---
+AWSTemplateFormatVersion: "2010-09-09"
+
+Description:
+  AWS CloudFormation Template to create a CI/CD pipeline for deploying a static website to S3 using CodePipeline, CodeBuild, and CodeStar Connections.
+
+
+Parameters:
+  BucketProjectName:
+    Description: The name of the S3 bucket to create
+    Type: String
+    Default: aws-static-website-hosting
+  ProjectName:
+    Description: The name of the project
+    Type: String
+    Default: awsStaticWebHosting
+  SourceActionGiveName:
+    Type: String
+    Description: The name to give to the source action in the pipeline
+    Default: GitHubSource
+  BranchName:
+    Description: Git Branch to track
+    Type: String
+    Default: awsStaticWebHosting
+    AllowedValues:
+      - awsStaticWebHosting
+      - main
+
+Resources:
+  CodeBuildServiceRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: CodeBuildServiceRole
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: codebuild.amazonaws.com
+            Action: sts:AssumeRole
+      Policies:
+        - PolicyName: CodeBuildStaticSitePolicy
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              - Effect: Allow
+                Action:
+                  - s3:GetObject
+                  - s3:PutObject
+                  - s3:ListBucket
+                Resource:
+                  - !Sub arn:${AWS::Partition}:s3:::${DeploymentBucket}
+                  - !Sub arn:${AWS::Partition}:s3:::${DeploymentBucket}/*
+                  - !Sub arn:${AWS::Partition}:s3:::${PipelineArtifactBucket}
+                  - !Sub arn:${AWS::Partition}:s3:::${PipelineArtifactBucket}/*
+              - Effect: Allow
+                Action:
+                  - logs:CreateLogGroup
+                  - logs:CreateLogStream
+                  - logs:PutLogEvents
+                Resource: "*"
+              # - Effect: Allow
+              #   Action:
+              #     - cloudfront:CreateInvalidation
+              #   Resource: !Sub arn:${AWS::Partition}:cloudfront::${AWS::AccountId}:distribution/${CloudFrontDistributionId} # "*"
+
+  CodePipelineServiceRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: CodePipelineServiceRole
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: codepipeline.amazonaws.com
+            Action: sts:AssumeRole
+      Policies:
+        - PolicyName: CodePipelinePolicy
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              - Effect: Allow
+                Action:
+                  - codebuild:StartBuild
+                  - codebuild:BatchGetBuilds
+                Resource: !GetAtt StaticWebBuild.Arn
+              - Effect: Allow
+                Action:
+                  -  codestar-connections:UseConnection
+                Resource: !GetAtt GithubConnection.ConnectionArn
+              - Effect: Allow
+                Action:
+                  - s3:GetObject
+                  - s3:GetBucketVersioning
+                  - s3:PutObject
+                Resource:
+                  - !Sub arn:${AWS::Partition}:s3:::${PipelineArtifactBucket}
+                  - !Sub arn:${AWS::Partition}:s3:::${PipelineArtifactBucket}/*
+
+  GithubConnection:
+    Type: AWS::CodeStarConnections::Connection
+    Properties:
+      ConnectionName: PersonalGithub
+      ProviderType: GitHub
+
+  PipelineArtifactBucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: !Sub '${BucketProjectName}-wnkp-artifacts'
+
+  DeploymentBucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      # AccessControl: PublicRead
+      PublicAccessBlockConfiguration:
+        BlockPublicAcls: false
+      OwnershipControls:
+        Rules:
+          - ObjectOwnership: ObjectWriter
+      BucketName: !Sub '${BucketProjectName}-wnkp-deployment'
+      WebsiteConfiguration:
+        IndexDocument: index.html
+  
+  PolicyForDeploymentBucket:
+    Type: 'AWS::S3::BucketPolicy'
+    Properties:
+      Bucket: !Ref DeploymentBucket
+      PolicyDocument:
+        Version: 2012-10-17
+        Statement:
+          - Sid: PublicReadForGetBucketObjects
+            Effect: Allow
+            Principal:
+              CanonicalUser: !GetAtt CloudFrontOAI.S3CanonicalUserId
+            Action: 's3:GetObject'
+            Resource: !Sub "${DeploymentBucket.Arn}/*"
+
+  StaticWebBuild:
+    Type: AWS::CodeBuild::Project
+    Properties:
+      Name: !Ref ProjectName
+      ServiceRole: !GetAtt CodeBuildServiceRole.Arn
+      Source:
+        BuildSpec: aws-static-web-hosting/buildspec.yaml
+        Type: CODEPIPELINE
+      Artifacts:
+        Type: CODEPIPELINE
+      Environment:
+        Type: LINUX_CONTAINER
+        ComputeType: BUILD_GENERAL1_SMALL
+        Image: aws/codebuild/standard:7.0
+        EnvironmentVariables:
+          - Name: DEPLOYMENT_BUCKET
+            Value: !Ref DeploymentBucket
+      LogsConfig:
+        CloudWatchLogs:
+          Status: ENABLED
+          GroupName: !Sub '/aws/codebuild/${ProjectName}'
+          StreamName: !Sub '${ProjectName}-build-log'
+
+  Pipeline:
+    Type: AWS::CodePipeline::Pipeline
+    Properties:
+      RoleArn: !GetAtt CodePipelineServiceRole.Arn
+      PipelineType: V2
+      ExecutionMode: PARALLEL
+      ArtifactStore:
+        Type: S3
+        Location: !Ref PipelineArtifactBucket
+      Stages:
+        - Name: Source
+          Actions:
+            - Name: !Ref SourceActionGiveName
+              InputArtifacts: []
+              ActionTypeId:
+                Category: Source
+                Owner: AWS
+                Version: '1'
+                Provider: CodeStarSourceConnection
+              OutputArtifacts:
+                - Name: SourceOutput
+              Configuration:
+                BranchName: !Ref BranchName
+                ConnectionArn: !Ref GithubConnection
+                FullRepositoryId: williamnankap/devops-practice
+              RunOrder: 1
+        - Name: Build
+          Actions:
+            - Name: DeployToS3
+              InputArtifacts:
+                - Name: SourceOutput
+              ActionTypeId:
+                Category: Build
+                Owner: AWS
+                Provider: CodeBuild
+                Version: '1'
+              Configuration:
+                ProjectName: !Ref StaticWebBuild
+              RunOrder: 1
+      Triggers:
+        - ProviderType: CodeStarSourceConnection
+          GitConfiguration:
+            Push:
+              - Branches:
+                  Includes:
+                    - !Ref BranchName
+                FilePaths:
+                  Includes:
+                    - 'aws-static-web-hosting/*.html'
+            SourceActionName: !Ref SourceActionGiveName
+  
+  CloudFrontDistributionDeploymentBucket:
+    Type: 'AWS::CloudFront::Distribution'
+    Properties:
+      DistributionConfig:
+        Enabled: true
+        Origins:
+          - DomainName: !GetAtt DeploymentBucket.RegionalDomainName
+            Id: !GetAtt DeploymentBucket.Arn
+            S3OriginConfig:
+              OriginAccessIdentity: !Sub 'origin-access-identity/cloudfront/${CloudFrontOAI}'
+        DefaultCacheBehavior:
+          TargetOriginId: !GetAtt DeploymentBucket.Arn
+          ViewerProtocolPolicy: allow-all
+          AllowedMethods:
+            - GET
+            - HEAD
+          ForwardedValues:
+            QueryString: false
+            Cookies:
+              Forward: none
+        DefaultRootObject: 'index.html'
+
+  CloudFrontOAI:
+    Type: 'AWS::CloudFront::CloudFrontOriginAccessIdentity'
+    Properties:
+      CloudFrontOriginAccessIdentityConfig:
+        Comment: 'OAI for S3 DeploymentBucket origins'
