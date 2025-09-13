@@ -13,7 +13,7 @@ This project demonstrates a modern static website hosting solution on AWS with t
 - **CodePipeline**: Automated CI/CD pipeline for deployments
 - **CodeBuild**: Build service for processing source code
 - **GitHub Integration**: Source code repository connection
-- **Parameter Store**: Secure configuration management
+- **Parameter Store**: Secure configuration management (not used here, but it is add for futur)
 - **CloudFormation**: Infrastructure as Code (IaC) for reproducible deployments
 
 ## 📁 Project Structure
@@ -23,8 +23,11 @@ aws-static-web-hosting/
 ├── index.html              # Main HTML file with modern design
 ├── css/
 │   └── styles.css          # Comprehensive CSS styling
-├── cloudformation/         # Infrastructure templates
-├── scripts/               # Deployment and utility scripts
+├── cloudformation.yaml         # Infrastructure templates
+├── buildspec.yaml        # Codebuild templates
+├── deploy.sh              # Deployment scripts
+├── destroy.sh              # Destroying scripts
+├── update.sh              # Updating scripts
 ├── image.png              # Architecture diagram
 └── README.md              # This documentation
 ```
@@ -59,13 +62,10 @@ Update AWS Systems Manager Parameter Store with your configuration:
 ### 2. Deploy Infrastructure
 ```bash
 # Deploy the CloudFormation stack
-aws cloudformation deploy \
-  --template-file cloudformation/main-template.yaml \
-  --stack-name static-web-hosting \
-  --parameter-overrides \
-    GitHubRepo=your-username/your-repo \
-    DomainName=yourdomain.com \
-  --capabilities CAPABILITY_IAM
+aws cloudformation create-stack \
+  --stack-name static-website-pipeline \
+  --template-body file://cloudformation.yaml \
+  --capabilities CAPABILITY_NAMED_IAM --disable-rollback
 ```
 
 ### 3. Configure GitHub Connection
