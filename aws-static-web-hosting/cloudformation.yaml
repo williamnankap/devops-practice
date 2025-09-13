@@ -107,7 +107,7 @@ Resources:
   PipelineArtifactBucket:
     Type: AWS::S3::Bucket
     Properties:
-      BucketName: !Sub '${BucketProjectName}-${AWS::AccountId}-artifacts'
+      BucketName: !Sub '${BucketProjectName}-wnkp-artifacts'
 
   DeploymentBucket:
     Type: AWS::S3::Bucket
@@ -118,7 +118,7 @@ Resources:
       OwnershipControls:
         Rules:
           - ObjectOwnership: ObjectWriter
-      BucketName: !Sub '${BucketProjectName}-${AWS::AccountId}-deployment'
+      BucketName: !Sub '${BucketProjectName}-wnkp-deployment'
       WebsiteConfiguration:
         IndexDocument: index.html
   
